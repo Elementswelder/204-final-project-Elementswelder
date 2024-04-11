@@ -91,6 +91,7 @@ class MainPresenterTest {
         verify(viewMock, times(1)).displayTopicSearchResults(mockResponse.getResults());
         verify(viewMock, never()).displayErrorMessage(anyString());
     }
+    //Test
 
     @Test
     void topicSearchFailure() throws IOException {
