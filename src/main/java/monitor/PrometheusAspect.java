@@ -14,7 +14,7 @@ public class PrometheusAspect {
 
   static {
     try {
-      new HTTPServer(9090); // Starts a Prometheus HTTP server on port 1234
+      new HTTPServer(9090);
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -51,7 +51,7 @@ public class PrometheusAspect {
     try {
       return joinPoint.proceed();
     } finally {
-      timer.observeDuration(); // Record the duration after the method execution
+      timer.observeDuration();
     }
   }
 
@@ -80,7 +80,7 @@ public class PrometheusAspect {
     try {
       return joinPoint.proceed();
     } finally {
-      timer.observeDuration(); // Record the duration after the method execution
+      timer.observeDuration();
     }
   }
 
@@ -90,7 +90,7 @@ public class PrometheusAspect {
     try {
       return joinPoint.proceed();
     } finally {
-      timer.observeDuration(); // Record the duration after the method execution
+      timer.observeDuration();
     }
   }
 
@@ -100,12 +100,8 @@ public class PrometheusAspect {
     try {
       return joinPoint.proceed();
     } finally {
-      timer.observeDuration(); // Record the duration after the method execution
+      timer.observeDuration();
     }
   }
-
-
-
-
 
 }
