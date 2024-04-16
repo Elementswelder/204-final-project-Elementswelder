@@ -5,7 +5,7 @@
 
  env:
    TF_CLOUD_ORGANIZATION: "204_final_project"
-   TF_API_TOKEN: "${{ Action.TF_API_TOKEN }}"
+   TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
    TF_WORKSPACE: "204_final"
    CONFIG_DIRECTORY: "./"
 
