@@ -6,45 +6,112 @@ import app.model.requestresponse.Response;
 import app.service.Service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 
 class MainPresenterTest {
 
-    /*TODO: Write tests to assure that the Presenter and View classes interact as expected.  If the services throw an error,
-    *  the view.displayErrorMessage() function should be called inside the presenter class.  You will need to use
-    *  mock objects to effectively test the presenter.
-    */
     private MainPresenter classUnderTest;
+    private I_MainView viewMock;
+    private Service titleServiceMock;
+    private Service authorServiceMock;
+    private Service topicServiceMock;
 
     @BeforeEach
-    void setUp(){
-        I_MainView view = Mockito.mock(I_MainView.class);
-        Service service = Mockito.mock(Service.class);
+    void setUp() {
+        viewMock = mock(I_MainView.class);
+        titleServiceMock = mock(Service.class);
+        authorServiceMock = mock(Service.class);
+        topicServiceMock = mock(Service.class);
 
-        try {
-            Mockito.when(service.run(new Request("Exception"))).thenThrow(IOException.class);
-        } catch (IOException ignored) {
+        classUnderTest = new MainPresenter(viewMock, titleServiceMock, authorServiceMock, topicServiceMock);
+    }
 
-        }
 
-        classUnderTest = new MainPresenter(view, service, service, service);
+    @Test
+    void titleSearchSuccess() throws IOException {
+        String input = "ValidTitle";
+        Book[] emptyBooks = new Book[0];
+        Response mockResponse = new Response(emptyBooks);
+        when(titleServiceMock.run(new Request(input))).thenReturn(mockResponse);
 
+        classUnderTest.titleSearch(input);
+
+        verify(viewMock, times(1)).displayTitleSearchResults(mockResponse.getResults());
+        verify(viewMock, never()).displayErrorMessage(anyString());
     }
 
     @Test
-    void shouldPrintErrorMessage_whenReceiveInvalidResponse() throws IOException {
-        classUnderTest.titleSearch("Exception");
-        Mockito.verify(classUnderTest.getTitleService(), Mockito.times(1)).run(Mockito.any());
+    void titleSearchFailure() throws IOException {
+        String input = "Exception";
+        when(titleServiceMock.run(new Request(input))).thenThrow(IOException.class);
 
-        Mockito.verify(classUnderTest.getView(), Mockito.times(1)).displayErrorMessage(Mockito.anyString());
+        classUnderTest.titleSearch(input);
+
+        verify(viewMock, times(1)).displayErrorMessage(anyString());
     }
 
+    @Test
+    void authorSearchSuccess() throws IOException {
+        String input = "ValidAuthor";
+        Book[] emptyBooks = new Book[0];
+        Response mockResponse = new Response(emptyBooks);
+        when(authorServiceMock.run(new Request(input))).thenReturn(mockResponse);
 
+        classUnderTest.authorSearch(input);
+
+        verify(viewMock, times(1)).displayAuthorSearchResults(mockResponse.getResults());
+        verify(viewMock, never()).displayErrorMessage(anyString());
+    }
+
+    @Test
+    void authorSearchFailure() throws IOException {
+        String input = "Exception";
+        when(authorServiceMock.run(new Request(input))).thenThrow(IOException.class);
+
+        classUnderTest.authorSearch(input);
+
+        verify(viewMock, times(1)).displayErrorMessage(anyString());
+    }
+
+    @Test
+    void topicSearchSuccess() throws IOException {
+        String input = "ValidTopic";
+        Book[] emptyBooks = new Book[0];
+        Response mockResponse = new Response(emptyBooks);
+        when(topicServiceMock.run(new Request(input))).thenReturn(mockResponse);
+
+        classUnderTest.topicSearch(input);
+
+        verify(viewMock, times(1)).displayTopicSearchResults(mockResponse.getResults());
+        verify(viewMock, never()).displayErrorMessage(anyString());
+    }
+    //Test
+
+    @Test
+    void topicSearchFailure() throws IOException {
+        String input = "Exception";
+        when(topicServiceMock.run(new Request(input))).thenThrow(IOException.class);
+
+        classUnderTest.topicSearch(input);
+
+        verify(viewMock, times(1)).displayErrorMessage(anyString());
+    }
+
+    @Test
+    void inputFail() {
+        classUnderTest.titleSearch("");
+        classUnderTest.authorSearch("");
+        classUnderTest.topicSearch("");
+
+        // Assuming the error message for invalid input is specific to each method in the MainPresenter
+        verify(viewMock, times(1)).displayErrorMessage("Invalid input.  Please enter a valid title.");
+        verify(viewMock, times(1)).displayErrorMessage("Invalid input.  Please enter a valid author name.");
+        verify(viewMock, times(1)).displayErrorMessage("Invalid input.  Please enter a valid topic.");
+    }
 }

@@ -7,19 +7,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Set up JDK 17
-      uses: actions/setup-java@v2
-      with:
-        java-version: '17'
-        distribution: 'temurin'
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          java-version: '17'
+          distribution: 'temurin'
 
-    - name: Checkstyle check
-      run: mvn -ntp checkstyle:check -Dcheckstyle.violationSeverity=warning
+      - name: Checkstyle check
+        run: mvn -ntp checkstyle:check -Dcheckstyle.violationSeverity=warning
 
-    - name: Compile the code
-      run: mvn -ntp compile
+      - name: Compile the code
+        run: mvn -ntp compile
 
-    - name: Run tests for MainPresenter
-      run: mvn -ntp test -Dtest=MainPresenterTest
+      - name: Run tests for MainPresenter
+        run: mvn -ntp test -Dtest=MainPresenterTest
